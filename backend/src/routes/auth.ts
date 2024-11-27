@@ -6,6 +6,8 @@ const User=z.object({
 })
 import { Router } from "express";
 const router=Router();
+import { PrismaClient,Prisma } from '@prisma/client';
+const prisma = new PrismaClient();
 
 router.post('/signup',async (req,res)=>{
      const userObj = {
@@ -14,10 +16,38 @@ router.post('/signup',async (req,res)=>{
      }
      try {
           const user=User.parse(userObj);
-          res.json(user);
+          const newUser = await prisma.user.create({
+               data:{
+                    username: user.username,
+                    password: user.password
+               }
+          })
+          res.json(newUser);
      } catch (error) {
           res.send('Error creating user');
      }
 })
+router.post('/login',async(req,res)=>{
+     const userObj = {
+          username: req.body.username as string,
+          password: req.body.password as string
+     }
+     try{
+          const loginUser = await prisma.user.findFirst({
+               where:{
+                    username: userObj.username,
+                    password: userObj.password
+               }
+          })
+          if(loginUser){
+               res.json(userObj);
+          }else{
+               res.send('Invalid username or password');
+          }
+     }catch(error){
+          res.send('Error logging in');
+     }
+})
+
 
 export default router;
