@@ -3,6 +3,7 @@
 import { Router } from "express";
 const router = Router();
 import { PrismaClient } from '@prisma/client';
+import { number } from "zod";
 const prisma = new PrismaClient();
 
 router.post('/create',async(req,res)=>{
@@ -32,5 +33,18 @@ router.post('/create',async(req,res)=>{
           res.status(400).json({error:'Error creating content'});
      }
 });
+router.get('/:id',async(req,res)=>{
+     const id=Number(req.query.id);
+     try{
+          const cont=await prisma.content.findMany({
+               where:{
+                    id:1,
+               }
+          })
+          res.json(cont);
+     }catch(error){
+          res.status(400).json({error:'Error fetching content'});
+     }
+})
 
 export default router;
