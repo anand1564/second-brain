@@ -12,19 +12,14 @@ async function getTweet(
     const { data, tombstone, notFound } = await fetchTweet(id, fetchOptions)
  
     if (data) {
-      await kv.set(`tweet:${id}`, data)
       return data
     } else if (tombstone || notFound) {
       // remove the tweet from the cache if it has been made private by the author (tombstone)
-      // or if it no longer exists.
-      await kv.del(`tweet:${id}`)
+
     }
   } catch (error) {
     console.error('fetching the tweet failed with:', error)
   }
- 
-  const cachedTweet = await kv.get<Tweet>(`tweet:${id}`)
-  return cachedTweet ?? undefined
 }
  
 const TweetPage = async ({ id }: { id: string }) => {
