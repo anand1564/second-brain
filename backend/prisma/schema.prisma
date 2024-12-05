@@ -17,6 +17,8 @@ model User{
    username String @unique
    password String
    content Content[]
+   shareable Boolean @default(true)
+   link   String?
 }
 model Tags{
   id Int @id @default(autoincrement())
@@ -31,8 +33,10 @@ model Links{
 model Content{
   id Int @id @default(autoincrement())
   title String
+  type String @default("text")
   description String
-  link String
+  link String?
+  document String?
   tags Tags[]
   user User @relation(fields: [userId], references: [id])
   userId Int
