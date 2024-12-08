@@ -1,14 +1,15 @@
 
 import './App.css'
-import Content from './components/Content'
-import Page from './components/Tweet'
-import TextNotes  from './components/Text'
+import { Button } from './components/Button'
+import { Sidebar } from './components/Sidebar'
 function App() {
 
   return (
-    <div>
-     <Content/>
-     <TextNotes />
+    <div className='grid grid-cols-2'>
+      <Sidebar/>
+      <div>
+     <Button variant="primary" text="Primary Button" startIcon={<span>👍</span>} />
+     </div>
     </div>
   )
 }
