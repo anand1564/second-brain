@@ -3,8 +3,6 @@ import { Router } from "express";
 const router = Router();
 
 import { PrismaClient } from '@prisma/client';
-import { connect } from "http2";
-import { hash } from "crypto";
 const prisma = new PrismaClient();
 
 function generateLink(length:number) {
@@ -32,20 +30,21 @@ router.post('/create/:id',async(req,res)=>{
                     link:shareableLink
                }
           })
+          res.json({message:'Link created successfully'});
      }catch(error){
           res.status(400).json({error:'Error creating link'});
      }
 })
-router.get('/share/:link', async(req,res)=>{
-     const shareableLink = req.params.link;
-     try{ 
+// router.get('/share/:link', async(req,res)=>{
+//      const shareableLink = req.params.link;
+//      try{ 
 
-          const linkData = await prisma.user.findUnique({
-               where:{
-                    link: shareableLink,
-               }
-          })
-          return res.json(linkData);
-     }
-})
+//           const linkData = await prisma.user.findUnique({
+//                where:{
+//                     link: shareableLink,
+//                }
+//           })
+//           return res.json(linkData);
+//      }
+// })
 export default router;
