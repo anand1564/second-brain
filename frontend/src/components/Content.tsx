@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Card } from "./Card";
 
 
 export default function Content(){
@@ -17,10 +18,7 @@ export default function Content(){
                     <h1>Your Links</h1>
                     <div className="flex items-center justify-center">
                     {content.map((cont:any)=>(
-                         <div>
-                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleDisplay}>
-                              {cont.title}</button>
-                         </div>
+                         <Card title={cont.title} description={cont.description} type={cont.type}/>
                     ))}
                     </div>
                </div>

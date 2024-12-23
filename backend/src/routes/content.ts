@@ -7,11 +7,9 @@ import { number } from "zod";
 import { userInfo } from "os";
 const prisma = new PrismaClient();
 
-router.post('/create/:id/:type', async(req,res)=>{
+router.post('/create/:id/', async(req,res)=>{
      const user_id=Number(req.params.id);
-     const type=req.params.type;
-     const {title,description} = req.body;
-     const tag=req.body.tag || [];
+     const {title,description,type} = req.body;
      try{
           if(type=='Youtube' || type=='Tweet'){
                const link=req.body.link;
@@ -21,7 +19,7 @@ router.post('/create/:id/:type', async(req,res)=>{
                          description,
                          type,
                          link,
-                         user: {connect: {id: user_id}},
+                         userId:user_id,
                     }
                })
                res.json(cont);
@@ -35,7 +33,7 @@ router.get('/:id',async(req,res)=>{
      try{
           const cont=await prisma.content.findMany({
                where:{
-                    id:1,
+                    userId:1
                }
           })
           res.json(cont);

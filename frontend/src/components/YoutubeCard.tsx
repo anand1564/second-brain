@@ -5,6 +5,8 @@ interface YoutubeCardProps {
   videoId: string;
 }
 
+
+
 export function YoutubeCard({ title, videoId }: YoutubeCardProps) {
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`
 
