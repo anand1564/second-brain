@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { Play } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Navigation */}
@@ -17,7 +19,9 @@ const LandingPage = () => {
               <div className="flex items-center space-x-8">
                 <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
                 <a href="#how-it-works" className="text-gray-600 hover:text-gray-900">How it Works</a>
-                <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" onClick={()=>{
+                  navigate('/auth')
+                }}>
                   Get Started
                 </button>
               </div>

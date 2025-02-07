@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 import { Card } from "./Card";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Content(){
+     const navigate = useNavigate();
      const [content,setContent] = useState([]);
      const handleDisplay=()=>{
           
@@ -23,7 +25,7 @@ export default function Content(){
                     </div>
                </div>
                <div>
-                    <button>Add Content</button>
+                    <button onClick={()=>{navigate('/add')}}>Add Content</button>
                </div>
           </div>
      )

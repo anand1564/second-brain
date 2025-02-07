@@ -6,35 +6,58 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { useNavigate } from 'react-router-dom'
 
 type AuthMode = 'signup' | 'login'
 
 interface FormData {
   name?: string
-  email: string
   password: string
 }
+interface ApiResponse {
+  userId?: string;
+  error?: string;
+}
+
 
 export default function AuthCard() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<AuthMode>('login')
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    email: '',
     password: '',
   })
+  const [userId,setUserId] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault()
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData)
-    // Reset form after submission
-    setFormData({ name: '', email: '', password: '' })
-  }, [formData])
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    try {
+      const endpoint = mode === 'login' ? '/auth/login' : '/auth/signup';
+      const res = await fetch(`http://localhost:3000${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+  
+      const data: ApiResponse = await res.json();
+  
+      if (res.ok && data.userId) {
+        setUserId(data.userId);
+        navigate(`/${data.userId}`);
+      } else {
+        console.error(data.error || 'Operation failed');
+      }
+    } catch (err) {
+      console.error('Network error', err);
+    }
+  };
+  
 
   const toggleMode = () => {
     setMode(prev => prev === 'login' ? 'signup' : 'login')
@@ -65,7 +88,7 @@ export default function AuthCard() {
               />
             </div>
           )}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -76,7 +99,7 @@ export default function AuthCard() {
               onChange={handleInputChange}
               required
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <Label htmlFor="password">Password</Label>
             <Input
