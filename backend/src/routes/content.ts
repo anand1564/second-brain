@@ -3,8 +3,6 @@
 import { Router } from "express";
 const router = Router();
 import { PrismaClient } from '@prisma/client';
-import { number } from "zod";
-import { userInfo } from "os";
 const prisma = new PrismaClient();
 
 router.post('/create/:id/', async(req,res)=>{
@@ -19,7 +17,7 @@ router.post('/create/:id/', async(req,res)=>{
                          description,
                          type,
                          link,
-                         userId:user_id,
+                         userId:"1",
                     }
                })
                res.json(cont);
@@ -29,11 +27,11 @@ router.post('/create/:id/', async(req,res)=>{
      }
 })
 router.get('/:id',async(req,res)=>{
-     const id=Number(req.query.id);
+     const id=(req.query.id);
      try{
           const cont=await prisma.content.findMany({
                where:{
-                    userId:1
+                    userId:"1",
                }
           })
           res.json(cont);

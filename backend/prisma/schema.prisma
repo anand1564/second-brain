@@ -12,33 +12,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id Int @id @default(autoincrement())
-   username String @unique
-   password String
-   content Content[]
-   shareable Boolean @default(true)
-   link   String?
+model User {
+  googleId   String  @id @default(uuid())
+  email      String  @unique
+  name       String
+  profilePic String?
+  createdAt  DateTime @default(now())
+  content    Content[]
 }
-model Tags{
-  id Int @id @default(autoincrement())
-  name  String
-  content Content[]
+
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  content ContentTag[]
 }
-model Links{
-  hash   String @id
-  url    String
-  description  String
-}
-model Content{
-  id Int @id @default(autoincrement())
-  title String
-  type String @default("text")
+
+model Link {
+  hash        String @id
+  url         String @unique
   description String
-  link String?
-  document String?
-  tags Tags[]
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  createdAt DateTime@default(now())
 }
+
+model Content {
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String   @default("text")
+  description String
+  link        String?
+  document    String?
+  tags        ContentTag[]
+  user        User     @relation(fields: [userId], references: [googleId])
+  userId      String
+  createdAt   DateTime @default(now())
+}
+
+model ContentTag {
+  contentId Int
+  tagId     Int
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contentId, tagId]) // Composite primary key for many-to-many relation
+}
+
