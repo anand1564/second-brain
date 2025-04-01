@@ -15,8 +15,7 @@ router.post('/create/:id/', async(req,res)=>{
                     data:{
                          title,
                          description,
-                         type,
-                         link,
+                         url:link,
                          userId:"1",
                     }
                })

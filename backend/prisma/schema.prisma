@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,37 +6,38 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  googleId   String  @id @default(uuid())
+  id  String  @id @default(uuid())
   email      String  @unique
+  password   String
   name       String
   profilePic String?
   createdAt  DateTime @default(now())
   content    Content[]
+  tags       Tag[]
 }
-
 
 model Tag {
   id      Int      @id @default(autoincrement())
-  name    String   @unique
+  name    String
+  userId  String  // Associate each tag with a user
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   content ContentTag[]
+
+  @@unique([name, userId])  // Ensure a user can only create a tag once, but different users can have the same tag
 }
 
-model Link {
-  hash        String @id
-  url         String @unique
-  description String
-}
 
 model Content {
   id          Int      @id @default(autoincrement())
   title       String
-  type        String   @default("text")
   description String
-  link        String?
-  document    String?
+  textContent String?  // For plain text
+  url         String?  // For links (YouTube, X, Drive, etc.)
+  filePath    String?  // For uploaded files (PDFs, images)
   tags        ContentTag[]
-  user        User     @relation(fields: [userId], references: [googleId])
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
   createdAt   DateTime @default(now())
 }
@@ -55,4 +50,3 @@ model ContentTag {
 
   @@id([contentId, tagId]) // Composite primary key for many-to-many relation
 }
-
